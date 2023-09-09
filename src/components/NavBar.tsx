@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import NextLink from "next/link";
 import { RiGithubLine, RiRssFill, RiMoonFill, RiSunFill } from "react-icons/ri";
 
@@ -14,12 +14,31 @@ import {
   NavbarMenuItem,
   NavbarMenuToggle,
 } from "@nextui-org/react";
+import { useTheme } from "next-themes";
 
 function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isLightTheme, setIsLightTheme] = useState(true);
 
+  const [mounted, setMounted] = useState(false);
+  const { theme, setTheme } = useTheme();
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) return null;
+
   const menuItems = ["Blog"];
+
+  const switchTheme = () => {
+    if (isLightTheme) {
+      setTheme("dark");
+    } else {
+      setTheme("light");
+    }
+    setIsLightTheme(!isLightTheme);
+  };
 
   return (
     <NavUIbar isBordered shouldHideOnScroll>
@@ -30,7 +49,7 @@ function Navbar() {
         />
         <NavbarBrand>
           <NextLink href="/">
-            <p className="font-bold text-inherit">ACME</p>
+            <p className="font-bold text-inherit">{theme}</p>
           </NextLink>
         </NavbarBrand>
       </NavbarContent>
@@ -51,8 +70,13 @@ function Navbar() {
           </Button>
         </NavbarItem>
         <NavbarItem>
-          <Button isIconOnly variant="ghost" className="border-none">
-            {isLightTheme ? (
+          <Button
+            isIconOnly
+            variant="ghost"
+            className="border-none"
+            onClick={switchTheme}
+          >
+            {theme === "light" ? (
               <RiMoonFill className="text-lg"></RiMoonFill>
             ) : (
               <RiSunFill className="text-lg"></RiSunFill>
