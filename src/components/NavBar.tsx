@@ -21,8 +21,6 @@ function Navbar() {
   const [isLightTheme, setIsLightTheme] = useState(true);
   const pathname = usePathname();
 
-  console.log("pathname", pathname);
-
   const menuItems = [
     "Profile",
     "Dashboard",

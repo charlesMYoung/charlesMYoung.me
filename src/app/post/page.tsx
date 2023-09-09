@@ -1,10 +1,15 @@
 import { join } from "path";
 import fs from "fs";
-import matter from "gray-matter";
 import React from "react";
 import { PostList } from "@/components/PostList";
+import { compileMDX } from "next-mdx-remote/rsc";
+import gfm from "remark-gfm";
+import math from "remark-math";
+import breaks from "remark-breaks";
+import highlight from "rehype-highlight";
+import gemoji from "remark-gemoji";
 
-const getPost = () => {
+const getPost = async () => {
   let allArticles: any = [];
 
   // 处理本地打包文章读取
@@ -13,41 +18,50 @@ const getPost = () => {
   });
 
   if (Array.isArray(allLocalArticles) && allLocalArticles.length > 0) {
-    const allLocals = allLocalArticles.map((fileName) => {
+    const allLocals = allLocalArticles.map(async (fileName) => {
       const fileContent = fs.readFileSync(
         join(process.cwd(), "articles", fileName),
         {
           encoding: "utf-8",
         }
       );
-      const id = Math.random().toString(32).slice(2);
-      const mdContent = matter(fileContent);
-      const postMeta = mdContent.data as Post;
+      const { frontmatter } = await compileMDX<Post>({
+        source: fileContent || "",
+        options: {
+          parseFrontmatter: true,
+          mdxOptions: {
+            remarkPlugins: [gfm, math, breaks, gemoji],
+            rehypePlugins: [highlight],
+            format: "mdx",
+          },
+        },
+      });
       return {
-        id: "lo_" + id,
-        title: postMeta.title,
-        description: postMeta.description,
-        cover: postMeta.cover || "",
-        is_release: postMeta.is_release,
-        release_date: postMeta.release_date,
-        category: postMeta.category,
-        created_at: postMeta.created_at,
-        content: mdContent.content,
-        tags: postMeta.tags,
-        slug: fileName.replace(/\.mdx?$/, ""),
+        id: fileName.replace(/\.mdx?$/, ""),
+        title: frontmatter.title,
+        description: frontmatter.description,
+        cover: frontmatter.cover || "",
+        is_release: frontmatter.is_release,
+        release_date: frontmatter.release_date,
+        category: frontmatter.category,
+        created_at: frontmatter.created_at,
+        tags: frontmatter.tags,
         from: "local",
       };
     });
-    allArticles = [...allLocals];
+    const results = await Promise.all(allLocals);
+    allArticles = [...results];
   }
   return allArticles;
 };
 
-export default function page() {
-  const allPosts = getPost();
+export default async function page() {
+  const allPosts = await getPost();
   return (
-    <div className="mx-auto container">
-      <PostList posts={allPosts}></PostList>
+    <div className="container mx-auto items-stretch mt-8 px-4 md:px-0">
+      <div className="mx-auto grid grid-cols-1 md:grid-cols-2 gap-4 xl:grid-cols-3 xl:gap-4 2xl:grid-cols-4 2xl:gap-4">
+        <PostList posts={allPosts} />
+      </div>
     </div>
   );
 }

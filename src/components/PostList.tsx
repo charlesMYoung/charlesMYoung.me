@@ -1,6 +1,9 @@
 "use client";
-import { Button, Card, CardFooter, CardHeader, Image } from "@nextui-org/react";
+import { Card, CardBody, CardFooter, Image } from "@nextui-org/react";
 import React from "react";
+import NextLink from "next/link";
+import { formatDate } from "@/utils/time";
+import { twClass } from "@/utils/tw";
 
 export const PostList = ({ posts }: { posts: Post[] }) => {
   return (
@@ -8,31 +11,32 @@ export const PostList = ({ posts }: { posts: Post[] }) => {
       {posts.map((post: Post) => {
         return (
           <Card
+            className="flex flex-row"
             key={post.id}
-            className="w-96 h-[300px] col-span-12 sm:col-span-5"
+            isPressable
+            as={NextLink}
+            href={`/post/${post.id}`}
           >
-            <CardHeader>
-              <p className="text-tiny text-white/60 uppercase font-bold">New</p>
-              <h4 className="text-black font-medium text-2xl"> {post.title}</h4>
-            </CardHeader>
-            <Image
-              src={post.cover}
-              alt={post.title}
-              className="z-0 w-full h-full scale-125 -translate-y-6 object-cover"
-            ></Image>
-            <CardFooter className="absolute bg-white/30 bottom-0 border-t-1 border-zinc-100/50 z-10 justify-between">
-              <div>
-                <p className="text-black text-tiny">Available soon.</p>
-                <p className="text-black text-tiny">Get notified.</p>
-              </div>
-              <Button
-                className="text-tiny"
-                color="primary"
-                radius="full"
-                size="sm"
-              >
-                Notify Me
-              </Button>
+            <CardBody className="p-0">
+              <Image
+                src={post.cover}
+                alt={post.title}
+                width="100%"
+                className="z-0 w-full h-full object-cover"
+              ></Image>
+            </CardBody>
+            <CardFooter
+              className={twClass(
+                "z-10",
+                "sm:absolute sm:flex sm:justify-center sm:flex-col sm:h-full sm:space-y-4"
+              )}
+            >
+              <p className="text-default-500 text-large sm:text-3xl">
+                {post.title}
+              </p>
+              <p className="text-primary-500">
+                {formatDate(post.release_date)}
+              </p>
             </CardFooter>
           </Card>
         );

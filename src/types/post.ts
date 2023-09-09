@@ -20,7 +20,7 @@ type Post = {
   created_at: Date;
   update_at: Date;
   cover: string;
-  tags?: Tag[];
+  tags: string[];
 };
 
 type Category = {
