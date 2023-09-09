@@ -12,15 +12,15 @@ type Image = {
 type Post = {
   id: string;
   title: string;
-  description: string | null;
+  description: string;
   is_release: boolean;
   content: string;
-  release_date: Date | null;
-  category: string | null;
+  release_date: Date;
+  category: string;
   created_at: Date;
   update_at: Date;
   cover: string;
-  tags: string[];
+  tags?: string[];
 };
 
 type Category = {
@@ -31,4 +31,9 @@ type Category = {
 type Tag = {
   id: string;
   name: string;
+};
+
+type Props = {
+  params: { id: string };
+  searchParams: { [key: string]: string | string[] | undefined };
 };

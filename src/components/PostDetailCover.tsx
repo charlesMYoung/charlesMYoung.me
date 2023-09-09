@@ -4,13 +4,22 @@ import React from "react";
 import { FaRegCalendarTimes } from "react-icons/fa";
 import { BsTagsFill } from "react-icons/bs";
 import { formatDate } from "@/utils/time";
+
+export interface PostDetail {
+  title: string;
+  description: string;
+  cover: string;
+  release_date: Date;
+  tags?: string[];
+}
+
 export const PostDetailCover = ({
   title,
   description,
   cover,
   release_date,
   tags,
-}: Post) => {
+}: PostDetail) => {
   return (
     <div>
       <Card className="h-60 sm:h-80 md:h-96 lg:h-[32rem]">
@@ -38,19 +47,20 @@ export const PostDetailCover = ({
             )}
           </div>
           <div className="flex space-x-2">
-            {tags.map((tag, index) => {
-              return (
-                <Chip
-                  key={index}
-                  variant="shadow"
-                  startContent={
-                    <BsTagsFill className="text-default-500 "></BsTagsFill>
-                  }
-                >
-                  {tag}
-                </Chip>
-              );
-            })}
+            {Array.isArray(tags) &&
+              tags.map((tag, index) => {
+                return (
+                  <Chip
+                    key={index}
+                    variant="shadow"
+                    startContent={
+                      <BsTagsFill className="text-default-500 "></BsTagsFill>
+                    }
+                  >
+                    {tag}
+                  </Chip>
+                );
+              })}
           </div>
         </CardFooter>
       </Card>

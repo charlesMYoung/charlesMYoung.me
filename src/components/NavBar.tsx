@@ -14,25 +14,12 @@ import {
   NavbarMenuItem,
   NavbarMenuToggle,
 } from "@nextui-org/react";
-import { usePathname } from "next/navigation";
 
 function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isLightTheme, setIsLightTheme] = useState(true);
-  const pathname = usePathname();
 
-  const menuItems = [
-    "Profile",
-    "Dashboard",
-    "Activity",
-    "Analytics",
-    "System",
-    "Deployments",
-    "My Settings",
-    "Team Settings",
-    "Help & Feedback",
-    "Log Out",
-  ];
+  const menuItems = ["Blog"];
 
   return (
     <NavUIbar isBordered shouldHideOnScroll>
@@ -50,12 +37,6 @@ function Navbar() {
       <NavbarContent className="hidden sm:flex gap-4" justify="center">
         <NavbarItem>
           <Link href="/post">Blog</Link>
-        </NavbarItem>
-        <NavbarItem>
-          <Link href="/post">Sample</Link>
-        </NavbarItem>
-        <NavbarItem>
-          <Link href="#">Project</Link>
         </NavbarItem>
       </NavbarContent>
       <NavbarContent justify="end">
@@ -91,7 +72,7 @@ function Navbar() {
                   : "foreground"
               }
               className="w-full"
-              href="#"
+              href={`/${item}`}
               size="lg"
             >
               {item}
