@@ -23,7 +23,7 @@
     "eslint-config-next": "13.4.19",
     "framer-motion": "^10.16.1",
     "gray-matter": "^4.0.3",
-    "next": "13.4.19",
+    "next": "13.5.0",
     "next-mdx-remote": "^4.4.1",
     "next-themes": "^0.2.1",
     "postcss": "8.4.28",
