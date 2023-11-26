@@ -9,7 +9,6 @@ import {
 } from "@nextui-org/react";
 import React from "react";
 import NextLink from "next/link";
-import { formatDate } from "@/utils/time";
 import { twClass } from "@/utils/tw";
 import { BsTagsFill } from "react-icons/bs";
 
@@ -37,8 +36,8 @@ export const PostList = ({ posts }: { posts: Post[] }) => {
               ></Image>
             </CardBody>
             <CardFooter className={twClass("z-10 flex-col items-start")}>
-              <p className="text-default-500 mb-4">{post.description}</p>
-              <p className="text-primary-500 space-x-2">
+              <div className="text-default-500 mb-4">{post.description}</div>
+              <div className="text-primary-500 space-x-2">
                 {Array.isArray(post.tags) &&
                   post.tags.map((tag, index) => {
                     return (
@@ -53,7 +52,7 @@ export const PostList = ({ posts }: { posts: Post[] }) => {
                       </Chip>
                     );
                   })}
-              </p>
+              </div>
             </CardFooter>
           </Card>
         );

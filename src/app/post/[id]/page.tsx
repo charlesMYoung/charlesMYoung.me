@@ -1,60 +1,7 @@
 import React from "react";
-import { join } from "path";
-import fs from "fs";
-import gfm from "remark-gfm";
-import math from "remark-math";
-import breaks from "remark-breaks";
-import highlight from "rehype-highlight";
-import gemoji from "remark-gemoji";
-import { compileMDX } from "next-mdx-remote/rsc";
 import { PostDetailCover } from "@/components/PostDetailCover";
 import { Metadata, ResolvingMetadata } from "next";
-
-async function getLocalPostById(postId: string) {
-  const allLocalArticles = fs.readdirSync(join(process.cwd(), "articles"), {
-    encoding: "utf-8",
-  });
-
-  const currentPost = allLocalArticles.find(
-    (fileName) => fileName === `${decodeURIComponent(postId)}.mdx`
-  );
-  if (currentPost) {
-    const fileContent = fs.readFileSync(
-      join(process.cwd(), "articles", currentPost),
-      {
-        encoding: "utf-8",
-      }
-    );
-    const { content, frontmatter } = await compileMDX<Post>({
-      source: fileContent || "",
-      options: {
-        parseFrontmatter: true,
-        mdxOptions: {
-          remarkPlugins: [gfm, math, breaks, gemoji],
-          rehypePlugins: [highlight],
-          format: "mdx",
-        },
-      },
-    });
-    return {
-      content,
-      frontmatter,
-      from: "local",
-    };
-  }
-  return {
-    frontmatter: {
-      title: "",
-      id: "",
-      description: "",
-      is_release: false,
-      content: "",
-      cover: "",
-      release_date: new Date(),
-      tags: [""],
-    },
-  };
-}
+import { getLocalPostById } from "@/utils/localHandle";
 
 export async function generateMetadata(
   { params, searchParams }: Props,
@@ -72,7 +19,9 @@ export async function generateMetadata(
 
 const PageDetail = async ({ params: { id } }: { params: { id: string } }) => {
   const { content, frontmatter } = await getLocalPostById(id);
-
+  if (!frontmatter) {
+    return <div>404</div>;
+  }
   return (
     <div className="w-full px-4 md:px-12">
       <PostDetailCover

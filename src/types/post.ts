@@ -21,6 +21,7 @@ type Post = {
   update_at: Date;
   cover: string;
   tags?: string[];
+  dataSource?: string;
 };
 
 type Category = {

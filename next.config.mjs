@@ -11,8 +11,9 @@ import mdx from "@next/mdx";
 const nextConfig = {
   // Configure pageExtensions to include md and mdx
   pageExtensions: ["ts", "tsx", "js", "jsx", "md", "mdx"],
-  // Optionally, add any other Next.js config below
+  // Optionally, add any other Next.js config belowa
   reactStrictMode: true,
+  output: "standalone",
 };
 
 const withMDX = mdx({
